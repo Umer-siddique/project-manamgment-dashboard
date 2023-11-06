@@ -1,8 +1,20 @@
-import { Box, Container, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Heading, Text, filter } from "@chakra-ui/react";
 
 export default function Dashboard() {
+  const boxStyles = {
+    bg: "purple.400",
+    p: "10px",
+    m: "10px",
+    textAlign: "center",
+    filter: "blur(2px)",
+    _hover: {
+      filter: "blur(0)",
+      cursor: "pointer",
+    },
+  };
+
   return (
-    <Container>
+    <Container as="section" maxW="4xl" py="20px">
       <Heading my="30px" p="10px">
         Chakra UI Crash Course
       </Heading>
@@ -16,6 +28,10 @@ export default function Dashboard() {
 
       <Box bg="green" p="10px" my="10px">
         <Text color="white">This is a box.</Text>
+      </Box>
+
+      <Box sx={boxStyles}>
+        <Text color="white">Hello, Dev</Text>
       </Box>
     </Container>
   );
