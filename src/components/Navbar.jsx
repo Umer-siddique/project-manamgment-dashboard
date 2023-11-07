@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   Flex,
@@ -16,9 +17,10 @@ const Navbar = () => {
       <Spacer />
 
       <HStack spacing="20px">
-        <Box bg="gray.200" p="10px">
+        {/* <Box bg="gray.200" p="10px">
           M
-        </Box>
+        </Box> */}
+        <Avatar name="Abdul Moiz" bg="purple.400" />
         <Text>mario@netninja.dev</Text>
         <Button colorScheme="purple">Logout</Button>
       </HStack>
