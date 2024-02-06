@@ -8,8 +8,10 @@ import {
   Divider,
   Heading,
   Image,
+  Link,
   SimpleGrid,
   Stack,
+  Tag,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -17,10 +19,12 @@ import { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import Loader from "../components/Loader";
+import { useProjectContext } from "../hooks/useProjectContext";
 
 export default function Dashboard() {
   const toast = useToast();
   const { apiCall, clearError, isLoading } = useApi();
+  const { projects, dispatch } = useProjectContext();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -29,13 +33,13 @@ export default function Dashboard() {
         const data = await apiCall("/api/v1/projects");
         if (data) {
           console.log("data", data);
-          // dispatch({ type: "LOGIN", payload: data?.data?.user });
+          dispatch({ type: "SET_PROJECTS", payload: data?.data?.projects });
           clearError();
         }
       } catch (err) {
         console.log(err);
         toast({
-          description: err?.response?.data?.message,
+          description: err?.response?.data?.message || "Something went wrong",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -51,33 +55,52 @@ export default function Dashboard() {
 
   return (
     <SimpleGrid columns={4} p="10px" spacing={10} minChildWidth="300px">
-      {[1, 2, 3, 4, 5, 6].map((el, i) => {
+      {projects?.map((el, i) => {
         return (
           <Card maxW="sm" key={i}>
             <CardBody>
               <Image
-                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                alt="Green double couch with wooden legs"
+                src={el?.image}
+                alt="Project image"
                 borderRadius="lg"
+                w={"100%"}
+                // h={"250px"}
+                objectFit="contain"
               />
               <Stack mt="6" spacing="3">
-                <Heading size="md">Living room Sofa</Heading>
-                <Text>
-                  This sofa is perfect for modern tropical spaces, baroque
+                <Heading size="md" textTransform="capitalize">
+                  {el?.projectName}
+                </Heading>
+                <Text color="gray.600" fontSize="13px">
+                  {el?.description}
                 </Text>
-                <Text color="blue.600" fontSize="2xl">
-                  $450
-                </Text>
+                <Stack direction="row" spacing="1">
+                  {el?.techStacks.map((tech, index) => (
+                    <Tag
+                      key={index}
+                      size="md"
+                      variant="solid"
+                      colorScheme="purple"
+                      bg="purple.500"
+                    >
+                      {tech}
+                    </Tag>
+                  ))}
+                </Stack>
               </Stack>
             </CardBody>
             <Divider />
             <CardFooter>
               <ButtonGroup spacing="2">
                 <Button variant="solid" colorScheme="purple">
-                  View
+                  <Link href={el?.liveLink} target="_blank">
+                    View
+                  </Link>
                 </Button>
                 <Button variant="ghost" colorScheme="purple">
-                  Github
+                  <Link href={el?.repoLink} target="_blank">
+                    Github
+                  </Link>
                 </Button>
                 <Button variant="ghost" colorScheme="purple">
                   Update
