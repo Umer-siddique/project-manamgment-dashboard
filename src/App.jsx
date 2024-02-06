@@ -15,7 +15,7 @@ import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 
 const App = () => {
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   const routes = createRoutesFromElements(
     <>

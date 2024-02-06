@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Center,
-  CircularProgress,
   FormControl,
   FormLabel,
   Heading,
@@ -13,8 +12,10 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
@@ -25,13 +26,14 @@ const Signup = () => {
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: "Account created.",
+        // title: "Account created.",
         description: "You have successfully signed up.",
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
+      navigate("/login");
     }, 2000);
   };
 
@@ -77,8 +79,8 @@ const Signup = () => {
           </Stack>
         </form>
         <Text mt={4} textAlign="center">
-          Already have an account?{" "}
-          <Link color="purple.500" fontWeight="bold" href="/login">
+          Already have an account?
+          <Link color="purple.500" ml={1} fontWeight="bold" href="/login">
             Login
           </Link>
         </Text>

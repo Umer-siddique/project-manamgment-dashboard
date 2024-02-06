@@ -1,7 +1,10 @@
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   // const boxStyles = {
   //   bg: "purple.400",
   //   p: "10px",
