@@ -2,10 +2,12 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Grid, GridItem } from "@chakra-ui/react";
 import Sidebar from "../components/Sidebar";
-import { useEffect } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import Login from "../pages/Login";
 
 export default function RootLayout() {
-  return (
+  const { user } = useAuthContext();
+  return user ? (
     <Grid templateColumns="repeat(6,1fr)" bg="gray.100">
       <GridItem
         as="aside"
@@ -21,5 +23,7 @@ export default function RootLayout() {
         <Outlet />
       </GridItem>
     </Grid>
+  ) : (
+    <Login />
   );
 }

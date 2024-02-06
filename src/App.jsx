@@ -15,22 +15,17 @@ import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 
 const App = () => {
-  const isLoggedIn = false;
-
   const routes = createRoutesFromElements(
     <>
-      {!isLoggedIn ? (
-        <>
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-        </>
-      ) : (
-        <Route path="/" element={<RootLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="create" element={<Create />} />
-          <Route path="profile" element={<Profile />} />
-        </Route>
-      )}
+      <>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </>
+      <Route path="/" element={<RootLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="create" element={<Create />} />
+        <Route path="profile" element={<Profile />} />
+      </Route>
     </>
   );
 

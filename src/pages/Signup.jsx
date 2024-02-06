@@ -13,28 +13,54 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import useApi from "./../hooks/useApi";
 
 const Signup = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
+  const { apiCall, isLoading, clearError } = useApi();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const toast = useToast();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    // Simulate API call or any other async task
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      clearError();
+      const data = await apiCall("/api/v1/users/signup", "POST", formData);
+      if (data) {
+        console.log("user", data);
+        toast({
+          description: "Successfully signed up! Login now.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        clearError();
+        navigate("/login");
+      }
+    } catch (err) {
+      console.log(err);
       toast({
-        // title: "Account created.",
-        description: "You have successfully signed up.",
-        status: "success",
+        description: err?.response?.data?.message,
+        status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-      navigate("/login");
-    }, 2000);
+    }
   };
 
   return (
@@ -54,24 +80,48 @@ const Signup = () => {
           <Stack spacing={6}>
             <FormControl isRequired>
               <FormLabel>Name</FormLabel>
-              <Input type="text" placeholder="Enter your name" />
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
-              <Input type="email" placeholder="Enter your email" />
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
-              <Input type="password" placeholder="Enter your password" />
+              <Input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Confirm Password</FormLabel>
-              <Input type="password" placeholder="Confirm your password" />
+              <Input
+                type="password"
+                name="passwordConfirm"
+                value={formData.passwordConfirm}
+                onChange={handleChange}
+                placeholder="Confirm your password"
+              />
             </FormControl>
             <Button
               type="submit"
               colorScheme="purple"
-              isLoading={loading}
+              isLoading={isLoading}
               loadingText="Signing up..."
             >
               Signup

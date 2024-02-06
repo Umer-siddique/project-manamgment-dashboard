@@ -13,28 +13,50 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import useApi from "../hooks/useApi";
+import { useAuthContext } from "./../hooks/useAuthContext";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { apiCall, isLoading, clearError } = useApi();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const { dispatch } = useAuthContext();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    // Simulate API call or any other async task
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      clearError();
+      const data = await apiCall("/api/v1/users/login", "POST", {
+        email,
+        password,
+      });
+      if (data) {
+        console.log("user", data);
+        dispatch({ type: "LOGIN", payload: data?.data?.user });
+        localStorage.setItem("user", JSON.stringify(data?.data?.user));
+        localStorage.setItem("token", JSON.stringify(data?.token));
+        toast({
+          description: "Successfully Logged in!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        clearError();
+        navigate("/");
+      }
+    } catch (err) {
+      console.log(err);
       toast({
-        // title: "Account created.",
-        description: "You have successfully signed up.",
-        status: "success",
+        description: err?.response?.data?.message,
+        status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-      navigate("/login");
-    }, 2000);
+    }
   };
 
   return (
@@ -54,17 +76,25 @@ const Login = () => {
           <Stack spacing={6}>
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
-              <Input type="email" placeholder="Enter your email" />
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>
-              <Input type="password" placeholder="Enter your password" />
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FormControl>
 
             <Button
               type="submit"
               colorScheme="purple"
-              isLoading={loading}
+              isLoading={isLoading}
               loadingText="Signing in..."
             >
               Login
