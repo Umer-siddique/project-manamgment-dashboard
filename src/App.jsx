@@ -5,8 +5,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  Navigate,
-  useLocation,
+  Routes,
 } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
 import Login from "./pages/Login";
@@ -16,19 +15,23 @@ import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 
 const App = () => {
-  const { pathname } = useLocation();
-  const isLoggedIn = false;
-
-  console.log(pathname);
+  const isLoggedIn = true;
 
   const routes = createRoutesFromElements(
-    <Route path="/" element={<RootLayout />}>
-      <Route index element={<Dashboard />} />
-      <Route path="create" element={<Create />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="login" element={<Login />} />
-    </Route>
+    <>
+      {!isLoggedIn ? (
+        <>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+        </>
+      ) : (
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="create" element={<Create />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+      )}
+    </>
   );
 
   const router = createBrowserRouter(routes);
