@@ -1,4 +1,5 @@
 import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Navigate } from "react-router-dom";
 
 export default function Dashboard() {
   // const boxStyles = {

@@ -12,7 +12,7 @@ import {
 const Navbar = () => {
   return (
     <Flex as="nav" p="10px" alignItems="center">
-      <Heading as="h1">Dojo Tasks</Heading>
+      <Heading as="h1">Project Managment</Heading>
 
       <Spacer />
 
@@ -20,7 +20,7 @@ const Navbar = () => {
         {/* <Box bg="gray.200" p="10px">
           M
         </Box> */}
-        <Avatar name="Abdul Moiz" bg="purple.400" />
+        <Avatar name="Abdul Moiz" color="white" bg="purple.400" />
         <Text>mario@netninja.dev</Text>
         <Button colorScheme="purple">Logout</Button>
       </HStack>

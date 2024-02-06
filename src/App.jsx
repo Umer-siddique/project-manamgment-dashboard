@@ -1,31 +1,39 @@
-import { 
-  createBrowserRouter, 
-  createRoutesFromElements, 
-  Route, 
-  RouterProvider 
-} from 'react-router-dom'
+// App.js
+import React from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import RootLayout from "./layouts/RootLayout";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Create from "./pages/Create";
+import Profile from "./pages/Profile";
+import Signup from "./pages/Signup";
 
-// layouts and pages
-import RootLayout from './layouts/RootLayout'
-import Dashboard from './pages/Dashboard'
-import Create from './pages/Create'
-import Profile from './pages/Profile'
+const App = () => {
+  const { pathname } = useLocation();
+  const isLoggedIn = false;
 
-// router and routes
-const router = createBrowserRouter(
-  createRoutesFromElements(
+  console.log(pathname);
+
+  const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Dashboard />} />
       <Route path="create" element={<Create />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="login" element={<Login />} />
     </Route>
-  )
-)
+  );
 
-function App() {
-  return (
-    <RouterProvider router={router} />
-  )
-}
+  const router = createBrowserRouter(routes);
 
-export default App
+  return <RouterProvider router={router} />;
+};
+
+export default App;

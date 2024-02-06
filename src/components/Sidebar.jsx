@@ -4,17 +4,17 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <List color="white" fontSize="1.2em" spacing={4}>
+    <List color="white" fontSize="1.1em" spacing={4}>
       <ListItem>
         <NavLink to="/">
           <ListIcon as={CalendarIcon} color="white" />
-          Dashboard
+          Projects
         </NavLink>
       </ListItem>
       <ListItem>
         <NavLink to="/create">
           <ListIcon as={EditIcon} color="white" />
-          New Task
+          New Project
         </NavLink>
       </ListItem>
       <ListItem>
