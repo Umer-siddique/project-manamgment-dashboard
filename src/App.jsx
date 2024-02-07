@@ -23,6 +23,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
       </>
       <Route path="/" element={<RootLayout />}>
+        <Route path="update/:id" element={<UpdateProject />} />
         <Route
           path="dashboard/projects/all"
           element={
@@ -51,7 +52,6 @@ const App = () => {
           }
         />
         <Route path="create" element={<CreateProject />} />
-        <Route path="/update/:id" element={<UpdateProject />} />
       </Route>
     </>
   );
