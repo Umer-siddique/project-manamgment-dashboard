@@ -103,24 +103,8 @@ export default function CreateProject({ projectId }) {
       } else {
         data = await apiCall(`/api/v1/projects`, "POST", formData);
       }
-      // data = await apiCall(
-      //   projectId ? `/api/v1/projects/${projectId}` : "/api/v1/projects",
-      //   projectId ? "PATCH" : "POST",
-      //   formData
-      // );
-      if (data) {
-        // if (!projectId) {
-        // dispatch({
-        //   type: "CREATE_PROJECT",
-        //   payload: data?.data?.project,
-        // });
-        // } else {
-        //   dispatch({
-        //     type: "UPDATE_PROJECT",
-        //     payload: data?.data?.project,
-        //   });
-        // }
 
+      if (data) {
         toast({
           description: projectId
             ? "Project updated successfully!"
@@ -131,7 +115,9 @@ export default function CreateProject({ projectId }) {
           position: "top",
         });
         clearError();
-        navigate(-1);
+        setTimeout(() => {
+          navigate(-1);
+        }, 2000);
       }
     } catch (err) {
       console.log(err);

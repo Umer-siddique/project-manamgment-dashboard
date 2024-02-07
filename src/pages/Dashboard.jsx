@@ -74,6 +74,7 @@ export default function Dashboard({ projectUrl, projectHeading }) {
   const handleArchiveConfirmation = async () => {
     try {
       clearError();
+      // Call your complete API here
       const data = await apiCall(
         `/api/v1/projects/${projectToArchive?._id}`,
         "PATCH",
@@ -89,6 +90,18 @@ export default function Dashboard({ projectUrl, projectHeading }) {
         });
         clearError();
         setIsArchiveOpen(false);
+
+        // Refetch projects to get updated list
+        const updatedProjectsData = await apiCall(
+          "/api/v1/projects?isCompleted=false&&isArchived=false"
+        );
+        if (updatedProjectsData) {
+          dispatch({
+            type: "SET_PROJECTS",
+            payload: updatedProjectsData?.data?.projects,
+          });
+          clearError();
+        }
       }
     } catch (err) {
       console.log(err);
@@ -105,6 +118,7 @@ export default function Dashboard({ projectUrl, projectHeading }) {
   const handleCompleteConfirmation = async () => {
     try {
       clearError();
+      // Call your complete API here
       const data = await apiCall(
         `/api/v1/projects/${projectToComplete?._id}`,
         "PATCH",
@@ -120,6 +134,18 @@ export default function Dashboard({ projectUrl, projectHeading }) {
         });
         clearError();
         setIsCompleteOpen(false);
+
+        // Refetch projects to get updated list
+        const updatedProjectsData = await apiCall(
+          "/api/v1/projects?isCompleted=false&&isArchived=false"
+        );
+        if (updatedProjectsData) {
+          dispatch({
+            type: "SET_PROJECTS",
+            payload: updatedProjectsData?.data?.projects,
+          });
+          clearError();
+        }
       }
     } catch (err) {
       console.log(err);
@@ -186,7 +212,7 @@ export default function Dashboard({ projectUrl, projectHeading }) {
           color="#777"
           fontWeight={"semibold"}
         >
-          No Project with this user added yet!
+          No Projects yet!
         </Text>
       )}
       <SimpleGrid columns={4} p="10px" spacing={6} minChildWidth="300px">
