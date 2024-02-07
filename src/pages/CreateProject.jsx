@@ -12,6 +12,7 @@ import {
   Textarea,
   Tag,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import useApi from "../hooks/useApi";
@@ -187,7 +188,24 @@ export default function CreateProject({ projectId }) {
   }, [project, projectId]);
 
   return (
-    <Box maxW="600px" m="auto" borderRadius="md">
+    <Box
+      maxW="600px"
+      m="auto"
+      borderRadius="md"
+      border="1px solid #ccc"
+      my={10}
+      p={6}
+      bg="white"
+    >
+      <Heading
+        as="h1"
+        fontSize={"1.5em"}
+        color="#333"
+        fontWeight={"semibold"}
+        mb={6}
+      >
+        {projectId ? "Update Project" : "Create Project"}
+      </Heading>
       <form onSubmit={handleSubmit}>
         {/* Other form controls... */}
         <FormControl mb="4">

@@ -1,8 +1,9 @@
 import { CalendarIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, List, ListIcon, ListItem, Text } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <List color="white" fontSize="1.1em" spacing={4}>
       <Box
@@ -13,6 +14,8 @@ const Sidebar = () => {
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
+        cursor={"pointer"}
+        onClick={() => navigate("/")}
       >
         <Text
           fontSize="2.6em"

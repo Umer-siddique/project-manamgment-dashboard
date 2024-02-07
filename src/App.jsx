@@ -23,7 +23,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
       </>
       <Route path="/" element={<RootLayout />}>
-        <Route path="update/:id" element={<UpdateProject />} />
+        <Route path="/update/:id" element={<UpdateProject />} />
         <Route
           path="dashboard/projects/all"
           element={
