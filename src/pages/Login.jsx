@@ -33,7 +33,6 @@ const Login = () => {
         password,
       });
       if (data) {
-        console.log("user", data);
         dispatch({ type: "LOGIN", payload: data?.data?.user });
         localStorage.setItem("user", JSON.stringify(data?.data?.user));
         localStorage.setItem("token", JSON.stringify(data?.token));
@@ -50,7 +49,7 @@ const Login = () => {
     } catch (err) {
       console.log(err);
       toast({
-        description: err?.response?.data?.message,
+        description: err?.response?.data?.message || "Something went wrong!",
         status: "error",
         duration: 3000,
         isClosable: true,

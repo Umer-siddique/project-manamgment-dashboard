@@ -40,7 +40,6 @@ const Signup = () => {
       clearError();
       const data = await apiCall("/api/v1/users/signup", "POST", formData);
       if (data) {
-        console.log("user", data);
         toast({
           description: "Successfully signed up! Login now.",
           status: "success",
@@ -54,7 +53,7 @@ const Signup = () => {
     } catch (err) {
       console.log(err);
       toast({
-        description: err?.response?.data?.message,
+        description: err?.response?.data?.message || "Something went wrong!",
         status: "error",
         duration: 3000,
         isClosable: true,

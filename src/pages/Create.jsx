@@ -9,15 +9,18 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Stack,
   Textarea,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
+import useApi from "../hooks/useApi";
+import { useProjectContext } from "../hooks/useProjectContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Create() {
-  const [formData, setFormData] = useState({
-    projectImage: "",
+  const [projectImg, setProjectImg] = useState(null);
+  const [projectData, setProjectData] = useState({
     projectName: "",
     description: "",
     startDate: "",
@@ -25,20 +28,34 @@ export default function Create() {
     liveLink: "",
     repoLink: "",
   });
-
   const [newTechStack, setNewTechStack] = useState("");
+  const toast = useToast();
+  const { dispatch } = useProjectContext();
+  const navigate = useNavigate();
+  const { apiCall, isLoading, clearError } = useApi();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setProjectData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
+  const handleImageChange = (e) => {
+    // Handle image upload and store in state
+    const file = e.target.files[0];
+    if (file) {
+      setProjectImg(file);
+    }
+  };
+
   const handleTechStacksChange = () => {
-    if (newTechStack.trim() !== "") {
-      setFormData((prevData) => ({
+    if (
+      newTechStack.trim() !== "" &&
+      !projectData?.techStacks?.includes(newTechStack)
+    ) {
+      setProjectData((prevData) => ({
         ...prevData,
         techStacks: [...prevData.techStacks, newTechStack.trim()],
       }));
@@ -47,16 +64,58 @@ export default function Create() {
   };
 
   const handleRemoveTechStack = (index) => {
-    setFormData((prevData) => ({
+    setProjectData((prevData) => ({
       ...prevData,
       techStacks: prevData.techStacks.filter((_, i) => i !== index),
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
+
+    // Create FormData object
+    const formData = new FormData();
+    formData.append("project", projectImg); // Append project image to form data
+
+    // Stringify the techStacks array and append it as a single value
+    formData.append("techStacks", JSON.stringify(projectData.techStacks));
+
+    // Append rest of the project data to form data
+    Object.keys(projectData)
+      .filter((key) => key !== "techStacks") // Exclude techStacks from keys
+      .forEach((key) => {
+        formData.append(key, projectData[key]);
+      });
+
+    // Integrate the create project api
+    try {
+      clearError();
+      const data = await apiCall("/api/v1/projects", "POST", formData);
+      if (data) {
+        dispatch({
+          type: "CREATE_PROJECT",
+          payload: data?.data?.project,
+        });
+        toast({
+          description: "Project Added Successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        clearError();
+        navigate("/");
+      }
+    } catch (err) {
+      console.log(err);
+      toast({
+        description: err?.response?.data?.message || "Something went wrong!",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   return (
@@ -68,11 +127,11 @@ export default function Create() {
           {/* Add image uploader input component */}
           <Input
             type="file"
-            name="projectImage"
             placeholder="Project Image"
-            onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
+            onChange={handleImageChange}
+            accept="image/*"
           />
         </FormControl>
         <FormControl mb="4">
@@ -81,7 +140,7 @@ export default function Create() {
             type="text"
             name="projectName"
             placeholder="Project Name"
-            value={formData.projectName}
+            value={projectData.projectName}
             onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
@@ -92,7 +151,7 @@ export default function Create() {
           <Textarea
             name="description"
             placeholder="Description"
-            value={formData.description}
+            value={projectData.description}
             onChange={handleChange}
             mb="2"
             resize="none"
@@ -106,7 +165,7 @@ export default function Create() {
             type="date"
             name="startDate"
             placeholder="Start Date"
-            value={formData.startDate}
+            value={projectData.startDate}
             onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
@@ -134,7 +193,7 @@ export default function Create() {
             </InputRightElement>
           </InputGroup>
           <Flex flexWrap="wrap" mt="2">
-            {formData.techStacks.map((tech, index) => (
+            {projectData.techStacks.map((tech, index) => (
               <Tag
                 key={index}
                 size="sm"
@@ -143,15 +202,15 @@ export default function Create() {
                 borderRadius="full"
                 mr="2"
                 mb="2"
+                gap={1}
               >
                 {tech}
-                <IconButton
-                  size="xs"
-                  aria-label="Remove Tech Stack"
-                  icon={<CloseIcon />}
+                <Box
+                  cursor="pointer"
                   onClick={() => handleRemoveTechStack(index)}
-                  ml="1"
-                />
+                >
+                  X
+                </Box>
               </Tag>
             ))}
           </Flex>
@@ -162,7 +221,7 @@ export default function Create() {
             type="text"
             name="liveLink"
             placeholder="Live Link"
-            value={formData.liveLink}
+            value={projectData.liveLink}
             onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
@@ -174,14 +233,19 @@ export default function Create() {
             type="text"
             name="repoLink"
             placeholder="Repo Link"
-            value={formData.repoLink}
+            value={projectData.repoLink}
             onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
           />
         </FormControl>
         <Flex justify="flex-end">
-          <Button colorScheme="purple" type="submit" isLoading={false}>
+          <Button
+            colorScheme="purple"
+            type="submit"
+            isLoading={isLoading}
+            loadingText="Creating..."
+          >
             Add Project
           </Button>
         </Flex>
