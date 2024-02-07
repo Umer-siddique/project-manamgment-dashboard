@@ -13,13 +13,14 @@ import {
   Input,
   Select,
   Stack,
+  Heading,
 } from "@chakra-ui/react";
 import useApi from "../hooks/useApi";
 import Loader from "../components/Loader";
 import Projects from "../components/Projects";
 import { useProjectContext } from "../hooks/useProjectContext";
 
-export default function Dashboard({ projectUrl }) {
+export default function Dashboard({ projectUrl, projectHeading }) {
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState(null);
@@ -136,7 +137,18 @@ export default function Dashboard({ projectUrl }) {
   return (
     <>
       {/* Filter and Search */}
-      <Stack direction={"row"} spacing={4}>
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        spacing={4}
+        my={10}
+        bg="white"
+        p={4}
+        borderRadius={"md"}
+      >
+        <Heading as="h1" fontSize={"1em"} color="#333" fontWeight={"semibold"}>
+          Filters and Search:
+        </Heading>
         <Input
           placeholder="Search by Name or Tech Stacks"
           value={searchQuery}
@@ -155,6 +167,16 @@ export default function Dashboard({ projectUrl }) {
           <option value="ZA">Z-A</option>
         </Select>
       </Stack>
+      <Heading
+        as="h1"
+        ml={2}
+        my={4}
+        fontSize={"1.5em"}
+        color="#333"
+        fontWeight={"semibold"}
+      >
+        {projectHeading}
+      </Heading>
       <SimpleGrid columns={4} p="10px" spacing={6} minChildWidth="300px">
         {projects?.map((el, i) => (
           <Projects

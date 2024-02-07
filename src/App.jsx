@@ -26,20 +26,32 @@ const App = () => {
         <Route
           path="dashboard/projects/all"
           element={
-            <Dashboard projectUrl="/api/v1/projects?isCompleted=false&&isArchived=false" />
+            <Dashboard
+              projectUrl="/api/v1/projects?isCompleted=false&&isArchived=false"
+              projectHeading="Current Projects"
+            />
           }
         />
         <Route
           path="dashboard/projects/completed"
-          element={<Dashboard projectUrl="/api/v1/projects?isCompleted=true" />}
+          element={
+            <Dashboard
+              projectUrl="/api/v1/projects?isCompleted=true"
+              projectHeading="Completed Projects"
+            />
+          }
         />
         <Route
           path="dashboard/projects/archived"
-          element={<Dashboard projectUrl="/api/v1/projects?isArchived=true" />}
+          element={
+            <Dashboard
+              projectUrl="/api/v1/projects?isArchived=true"
+              projectHeading="Archived Projects"
+            />
+          }
         />
         <Route path="create" element={<CreateProject />} />
         <Route path="update/:id" element={<UpdateProject />} />
-        <Route path="profile" element={<Profile />} />
       </Route>
     </>
   );

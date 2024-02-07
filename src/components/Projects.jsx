@@ -53,22 +53,30 @@ const Projects = ({
           </Stack>
         </Stack>
         <Stack mt={3}>
-          <Link
-            href={project?.liveLink}
-            target="_blank"
-            color="purple.500"
-            fontSize="13px"
-          >
-            {project?.liveLink}
-          </Link>
-          <Link
-            href={project?.repoLink}
-            target="_blank"
-            color="purple.500"
-            fontSize="13px"
-          >
-            {project?.repoLink}
-          </Link>
+          <Text fontSize={"14px"} color="#333" fontWeight="semibold">
+            Live URL:
+            <Link
+              href={project?.liveLink}
+              target="_blank"
+              color="purple.500"
+              fontSize="13px"
+              ml={2}
+            >
+              {project?.liveLink}
+            </Link>
+          </Text>
+          <Text fontSize={"14px"} color="#333" fontWeight="semibold">
+            Github URL:
+            <Link
+              href={project?.liveLink}
+              target="_blank"
+              color="purple.500"
+              fontSize="13px"
+              ml={2}
+            >
+              {project?.repoLink}
+            </Link>
+          </Text>
         </Stack>
       </CardBody>
       <Divider />

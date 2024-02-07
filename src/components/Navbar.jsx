@@ -21,8 +21,16 @@ const Navbar = () => {
   };
 
   return (
-    <Flex as="nav" p="10px" alignItems="center">
-      <Heading as="h1">Project Managment</Heading>
+    <Flex
+      as="nav"
+      p="10px"
+      alignItems="center"
+      bg="white"
+      border={"1px solid #ccc"}
+    >
+      <Heading as="h1" fontSize={"1.5em"} color="#333" fontWeight={"semibold"}>
+        Project Managment Dashboard
+      </Heading>
 
       <Spacer />
 

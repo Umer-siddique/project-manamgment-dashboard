@@ -29,12 +29,6 @@ const Sidebar = () => {
           New Project
         </NavLink>
       </ListItem>
-      <ListItem>
-        <NavLink to="/profile">
-          <ListIcon as={AtSignIcon} color="white" />
-          Profile
-        </NavLink>
-      </ListItem>
     </List>
   );
 };
