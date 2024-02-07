@@ -16,6 +16,18 @@ const projectReducer = (state, action) => {
           return project._id !== action.payload._id;
         }),
       };
+    case "UPDATE_PROJECT":
+      return {
+        projects: state.projects.map((project) => {
+          if (project._id === action.payload._id) {
+            return {
+              ...project,
+              ...action.payload,
+            };
+          }
+          return project;
+        }),
+      };
     default:
       return state;
   }

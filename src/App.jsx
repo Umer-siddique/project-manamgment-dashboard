@@ -10,9 +10,10 @@ import {
 import RootLayout from "./layouts/RootLayout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Create from "./pages/Create";
+import CreateProject from "./pages/CreateProject";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
+import UpdateProject from "./pages/UpdateProject";
 
 const App = () => {
   const routes = createRoutesFromElements(
@@ -36,7 +37,8 @@ const App = () => {
           path="dashboard/projects/archived"
           element={<Dashboard projectUrl="/api/v1/projects?isArchived=true" />}
         />
-        <Route path="create" element={<Create />} />
+        <Route path="create" element={<CreateProject />} />
+        <Route path="update/:id" element={<UpdateProject />} />
         <Route path="profile" element={<Profile />} />
       </Route>
     </>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,8 +17,10 @@ import { AddIcon } from "@chakra-ui/icons";
 import useApi from "../hooks/useApi";
 import { useProjectContext } from "../hooks/useProjectContext";
 import { useNavigate } from "react-router-dom";
+import formatDate from "../utils/helper";
 
-export default function Create() {
+export default function CreateProject({ projectId }) {
+  const [project, setProject] = useState(null);
   const [projectImg, setProjectImg] = useState(null);
   const [projectData, setProjectData] = useState({
     projectName: "",
@@ -75,7 +77,7 @@ export default function Create() {
 
     // Create FormData object
     const formData = new FormData();
-    formData.append("project", projectImg); // Append project image to form data
+    if (projectImg) formData.append("project", projectImg); // Append project image to form data
 
     // Stringify the techStacks array and append it as a single value
     formData.append("techStacks", JSON.stringify(projectData.techStacks));
@@ -89,22 +91,46 @@ export default function Create() {
 
     // Integrate the create project api
     try {
+      let data = null;
       clearError();
-      const data = await apiCall("/api/v1/projects", "POST", formData);
+      if (projectId) {
+        data = await apiCall(
+          `/api/v1/projects/${projectId}`,
+          "PATCH",
+          formData
+        );
+      } else {
+        data = await apiCall(`/api/v1/projects`, "POST", formData);
+      }
+      // data = await apiCall(
+      //   projectId ? `/api/v1/projects/${projectId}` : "/api/v1/projects",
+      //   projectId ? "PATCH" : "POST",
+      //   formData
+      // );
       if (data) {
-        dispatch({
-          type: "CREATE_PROJECT",
-          payload: data?.data?.project,
-        });
+        // if (!projectId) {
+        // dispatch({
+        //   type: "CREATE_PROJECT",
+        //   payload: data?.data?.project,
+        // });
+        // } else {
+        //   dispatch({
+        //     type: "UPDATE_PROJECT",
+        //     payload: data?.data?.project,
+        //   });
+        // }
+
         toast({
-          description: "Project Added Successfully!",
+          description: projectId
+            ? "Project updated successfully!"
+            : "Project Added Successfully!",
           status: "success",
           duration: 3000,
           isClosable: true,
           position: "top",
         });
         clearError();
-        navigate("/");
+        navigate(-1);
       }
     } catch (err) {
       console.log(err);
@@ -117,6 +143,48 @@ export default function Create() {
       });
     }
   };
+
+  // fetch single project
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const data = await apiCall(`/api/v1/projects/${projectId}`);
+        if (data) {
+          setProject(data?.data?.project);
+          clearError();
+        }
+      } catch (error) {
+        console.log(err);
+        toast({
+          description: err?.response?.data?.message || "Something went wrong!",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    };
+    if (projectId) fetchProject();
+  }, [projectId]);
+
+  // reset the project form with the single project found
+  useEffect(() => {
+    if (project) {
+      setProjectData(
+        projectId
+          ? {
+              ...projectData,
+              projectName: project.projectName,
+              description: project?.description,
+              startDate: project?.startDate,
+              techStacks: project?.techStacks,
+              repoLink: project?.repoLink,
+              liveLink: project?.liveLink,
+            }
+          : {}
+      );
+    }
+  }, [project, projectId]);
 
   return (
     <Box maxW="600px" m="auto" borderRadius="md">
@@ -165,7 +233,7 @@ export default function Create() {
             type="date"
             name="startDate"
             placeholder="Start Date"
-            value={projectData.startDate}
+            value={formatDate(projectData.startDate)}
             onChange={handleChange}
             mb="2"
             border="1px solid #ccc"
@@ -244,9 +312,9 @@ export default function Create() {
             colorScheme="purple"
             type="submit"
             isLoading={isLoading}
-            loadingText="Creating..."
+            loadingText={projectId ? "Updating..." : "Creating..."}
           >
-            Add Project
+            {projectId ? "Update Project" : "Add Project"}
           </Button>
         </Flex>
       </form>

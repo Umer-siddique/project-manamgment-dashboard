@@ -75,7 +75,7 @@ const Projects = ({
       <CardFooter>
         <ButtonGroup spacing="1">
           <Button variant="solid" colorScheme="purple">
-            Edit
+            <Link href={`/update/${project?._id}`}>Edit</Link>
           </Button>
           {!project?.isArchived && !project?.isCompleted && (
             <>
