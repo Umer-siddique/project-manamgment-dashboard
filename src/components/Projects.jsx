@@ -14,12 +14,6 @@ import {
 } from "@chakra-ui/react";
 
 const Projects = ({
-  //   image,
-  //   projectName,
-  //   description,
-  //   techStacks,
-  //   liveLink,
-  //   repoLink,
   project,
   setProjectToArchive,
   setIsArchiveOpen,
@@ -63,7 +57,6 @@ const Projects = ({
             href={project?.liveLink}
             target="_blank"
             color="purple.500"
-            // textDecoration="underline"
             fontSize="13px"
           >
             {project?.liveLink}
@@ -73,7 +66,6 @@ const Projects = ({
             target="_blank"
             color="purple.500"
             fontSize="13px"
-            // textDecoration="underline"
           >
             {project?.repoLink}
           </Link>
@@ -85,26 +77,31 @@ const Projects = ({
           <Button variant="solid" colorScheme="purple">
             Edit
           </Button>
-          <Button
-            variant="ghost"
-            colorScheme="purple"
-            onClick={() => {
-              setProjectToArchive(project);
-              setIsArchiveOpen(true);
-            }}
-          >
-            Archive
-          </Button>
-          <Button
-            variant="ghost"
-            colorScheme="purple"
-            onClick={() => {
-              setProjectToComplete(project);
-              setIsCompleteOpen(true);
-            }}
-          >
-            Complete
-          </Button>
+          {!project?.isArchived && !project?.isCompleted && (
+            <>
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                onClick={() => {
+                  setProjectToArchive(project);
+                  setIsArchiveOpen(true);
+                }}
+              >
+                Archive
+              </Button>
+
+              <Button
+                variant="ghost"
+                colorScheme="purple"
+                onClick={() => {
+                  setProjectToComplete(project);
+                  setIsCompleteOpen(true);
+                }}
+              >
+                Complete
+              </Button>
+            </>
+          )}
         </ButtonGroup>
       </CardFooter>
     </Card>

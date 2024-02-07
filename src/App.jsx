@@ -22,7 +22,20 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
       </>
       <Route path="/" element={<RootLayout />}>
-        <Route index element={<Dashboard />} />
+        <Route
+          path="dashboard/projects/all"
+          element={
+            <Dashboard projectUrl="/api/v1/projects?isCompleted=false&&isArchived=false" />
+          }
+        />
+        <Route
+          path="dashboard/projects/completed"
+          element={<Dashboard projectUrl="/api/v1/projects?isCompleted=true" />}
+        />
+        <Route
+          path="dashboard/projects/archived"
+          element={<Dashboard projectUrl="/api/v1/projects?isArchived=true" />}
+        />
         <Route path="create" element={<Create />} />
         <Route path="profile" element={<Profile />} />
       </Route>

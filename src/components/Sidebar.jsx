@@ -6,9 +6,21 @@ const Sidebar = () => {
   return (
     <List color="white" fontSize="1.1em" spacing={4}>
       <ListItem>
-        <NavLink to="/">
+        <NavLink to="/dashboard/projects/all">
           <ListIcon as={CalendarIcon} color="white" />
-          Projects
+          Current Projects
+        </NavLink>
+      </ListItem>
+      <ListItem>
+        <NavLink to="dashboard/projects/archived">
+          <ListIcon as={CalendarIcon} color="white" />
+          Archived Projects
+        </NavLink>
+      </ListItem>
+      <ListItem>
+        <NavLink to="/dashboard/projects/completed">
+          <ListIcon as={CalendarIcon} color="white" />
+          Completed Projects
         </NavLink>
       </ListItem>
       <ListItem>

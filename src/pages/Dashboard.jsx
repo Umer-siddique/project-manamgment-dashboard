@@ -16,7 +16,7 @@ import Loader from "../components/Loader";
 import { useProjectContext } from "../hooks/useProjectContext";
 import Projects from "../components/Projects";
 
-export default function Dashboard() {
+export default function Dashboard({ projectUrl }) {
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState(null);
@@ -29,9 +29,7 @@ export default function Dashboard() {
     const fetchProjects = async () => {
       try {
         clearError();
-        const data = await apiCall(
-          "/api/v1/projects?isCompleted=false&&isArchived=false"
-        );
+        const data = await apiCall(projectUrl);
         if (data) {
           console.log("data", data);
           dispatch({ type: "SET_PROJECTS", payload: data?.data?.projects });
@@ -50,7 +48,7 @@ export default function Dashboard() {
     };
 
     fetchProjects();
-  }, [dispatch]);
+  }, [dispatch, projectUrl]);
 
   const handleArchiveConfirmation = async () => {
     try {
@@ -150,12 +148,6 @@ export default function Dashboard() {
             <Projects
               key={el?._id}
               project={el}
-              // image={el?.image}
-              // projectName={el?.projectName}
-              // description={el?.description}
-              // techStacks={el?.techStacks}
-              // liveLink={el?.liveLink}
-              // repoLink={el?.repoLink}
               setProjectToArchive={setProjectToArchive}
               setIsArchiveOpen={setIsArchiveOpen}
               setProjectToComplete={setProjectToComplete}
