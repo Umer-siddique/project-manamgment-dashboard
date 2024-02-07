@@ -46,6 +46,7 @@ const Projects = ({
                 variant="solid"
                 colorScheme="purple"
                 bg="purple.500"
+                textTransform={"capitalize"}
               >
                 {tech}
               </Tag>
