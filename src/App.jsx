@@ -51,7 +51,7 @@ const App = () => {
           }
         />
         <Route path="create" element={<CreateProject />} />
-        <Route path="update/:id" element={<UpdateProject />} />
+        <Route path="/update/:id" element={<UpdateProject />} />
       </Route>
     </>
   );
