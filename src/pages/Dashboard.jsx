@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Button,
   SimpleGrid,
@@ -9,51 +10,68 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Input,
+  Select,
+  Stack,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
 import useApi from "../hooks/useApi";
 import Loader from "../components/Loader";
-import { useProjectContext } from "../hooks/useProjectContext";
 import Projects from "../components/Projects";
+import { useProjectContext } from "../hooks/useProjectContext";
 
 export default function Dashboard({ projectUrl }) {
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [projectToArchive, setProjectToArchive] = useState(null);
   const [projectToComplete, setProjectToComplete] = useState(null);
+  const [filter, setFilter] = useState(""); // State for filter selection (A-Z or Z-A)
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const toast = useToast();
   const { apiCall, clearError, isLoading } = useApi();
   const { projects, dispatch } = useProjectContext();
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        clearError();
-        const data = await apiCall(projectUrl);
-        if (data) {
-          console.log("data", data);
-          dispatch({ type: "SET_PROJECTS", payload: data?.data?.projects });
-          clearError();
-        }
-      } catch (err) {
-        console.log(err);
-        toast({
-          description: err?.response?.data?.message || "Something went wrong",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "top",
-        });
+  const fetchProjects = async () => {
+    try {
+      clearError();
+      let apiUrl = projectUrl;
+      if (filter) {
+        apiUrl += `&sort=${filter === "ZA" ? "createdAt" : "-createdAt"}`;
       }
-    };
+      if (searchQuery) {
+        apiUrl = `/api/v1/projects/search?q=${searchQuery}`;
+      }
+      const data = await apiCall(apiUrl);
+      if (data) {
+        dispatch({ type: "SET_PROJECTS", payload: data?.data?.projects });
+        clearError();
+      }
+    } catch (err) {
+      console.log(err);
+      toast({
+        description: err?.response?.data?.message || "Something went wrong",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchProjects();
+    }, 800);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  useEffect(() => {
     fetchProjects();
-  }, [dispatch, projectUrl]);
+  }, [dispatch, projectUrl, filter, toast]);
 
   const handleArchiveConfirmation = async () => {
     try {
       clearError();
-      // Call your complete API here
       const data = await apiCall(
         `/api/v1/projects/${projectToArchive?._id}`,
         "PATCH",
@@ -69,18 +87,6 @@ export default function Dashboard({ projectUrl }) {
         });
         clearError();
         setIsArchiveOpen(false);
-
-        // Refetch projects to get updated list
-        const updatedProjectsData = await apiCall(
-          "/api/v1/projects?isCompleted=false&&isArchived=false"
-        );
-        if (updatedProjectsData) {
-          dispatch({
-            type: "SET_PROJECTS",
-            payload: updatedProjectsData?.data?.projects,
-          });
-          clearError();
-        }
       }
     } catch (err) {
       console.log(err);
@@ -97,7 +103,6 @@ export default function Dashboard({ projectUrl }) {
   const handleCompleteConfirmation = async () => {
     try {
       clearError();
-      // Call your complete API here
       const data = await apiCall(
         `/api/v1/projects/${projectToComplete?._id}`,
         "PATCH",
@@ -113,18 +118,6 @@ export default function Dashboard({ projectUrl }) {
         });
         clearError();
         setIsCompleteOpen(false);
-
-        // Refetch projects to get updated list
-        const updatedProjectsData = await apiCall(
-          "/api/v1/projects?isCompleted=false&&isArchived=false"
-        );
-        if (updatedProjectsData) {
-          dispatch({
-            type: "SET_PROJECTS",
-            payload: updatedProjectsData?.data?.projects,
-          });
-          clearError();
-        }
       }
     } catch (err) {
       console.log(err);
@@ -142,19 +135,37 @@ export default function Dashboard({ projectUrl }) {
 
   return (
     <>
+      {/* Filter and Search */}
+      <Stack direction={"row"} spacing={4}>
+        <Input
+          placeholder="Search by Name or Tech Stacks"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          border="1px solid #ccc"
+          maxW={"400px"}
+          autoFocus
+        />
+        <Select
+          placeholder="Filter By Order"
+          onChange={(e) => setFilter(e.target.value)}
+          border="1px solid #ccc"
+          maxW={"400px"}
+        >
+          <option value="AZ">A-Z</option>
+          <option value="ZA">Z-A</option>
+        </Select>
+      </Stack>
       <SimpleGrid columns={4} p="10px" spacing={6} minChildWidth="300px">
-        {projects?.map((el, i) => {
-          return (
-            <Projects
-              key={el?._id}
-              project={el}
-              setProjectToArchive={setProjectToArchive}
-              setIsArchiveOpen={setIsArchiveOpen}
-              setProjectToComplete={setProjectToComplete}
-              setIsCompleteOpen={setIsCompleteOpen}
-            />
-          );
-        })}
+        {projects?.map((el, i) => (
+          <Projects
+            key={el?._id}
+            project={el}
+            setProjectToArchive={setProjectToArchive}
+            setIsArchiveOpen={setIsArchiveOpen}
+            setProjectToComplete={setProjectToComplete}
+            setIsCompleteOpen={setIsCompleteOpen}
+          />
+        ))}
       </SimpleGrid>
 
       {/* Archive confirmation modal */}

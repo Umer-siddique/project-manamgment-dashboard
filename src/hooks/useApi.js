@@ -9,9 +9,6 @@ const useApi = () => {
     setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem("token"));
-
-      console.log(token);
-
       const headers = {};
       if (token) {
         headers.Authorization = `Bearer ${token}`;
