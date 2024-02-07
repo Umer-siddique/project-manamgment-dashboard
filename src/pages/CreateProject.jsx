@@ -175,12 +175,7 @@ export default function CreateProject({ projectId }) {
         projectId
           ? {
               ...projectData,
-              projectName: project.projectName,
-              description: project?.description,
-              startDate: project?.startDate,
-              techStacks: project?.techStacks,
-              repoLink: project?.repoLink,
-              liveLink: project?.liveLink,
+              ...project,
             }
           : {}
       );

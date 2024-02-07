@@ -14,6 +14,7 @@ import {
   Select,
   Stack,
   Heading,
+  Text,
 } from "@chakra-ui/react";
 import useApi from "../hooks/useApi";
 import Loader from "../components/Loader";
@@ -177,6 +178,17 @@ export default function Dashboard({ projectUrl, projectHeading }) {
       >
         {projectHeading}
       </Heading>
+      {projects?.length === 0 && (
+        <Text
+          ml={2}
+          my={4}
+          fontSize={"1.2em"}
+          color="#777"
+          fontWeight={"semibold"}
+        >
+          No Project with this user added yet!
+        </Text>
+      )}
       <SimpleGrid columns={4} p="10px" spacing={6} minChildWidth="300px">
         {projects?.map((el, i) => (
           <Projects
