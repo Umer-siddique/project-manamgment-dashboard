@@ -76,7 +76,7 @@ export default function Dashboard({ projectUrl, projectHeading }) {
       clearError();
       // Call your complete API here
       const data = await apiCall(
-        `/api/v1/projects/${projectToArchive?._id}`,
+        `/api/v1/projects/mark-complete-archived/${projectToArchive?._id}`,
         "PATCH",
         { isArchived: true }
       );
@@ -120,7 +120,7 @@ export default function Dashboard({ projectUrl, projectHeading }) {
       clearError();
       // Call your complete API here
       const data = await apiCall(
-        `/api/v1/projects/${projectToComplete?._id}`,
+        `/api/v1/projects/mark-complete-archived/${projectToComplete?._id}`,
         "PATCH",
         { isCompleted: true }
       );
