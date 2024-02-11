@@ -100,6 +100,10 @@ export default function CreateProject({ projectId }) {
           "PATCH",
           formData
         );
+        dispatch({
+          type: "UPDATE_PROJECT",
+          payload: data?.data?.project,
+        });
       } else {
         data = await apiCall(`/api/v1/projects`, "POST", formData);
       }
