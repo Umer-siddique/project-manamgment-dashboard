@@ -117,7 +117,7 @@ export default function CreateProject({ projectId }) {
         clearError();
         setTimeout(() => {
           navigate(-1);
-        }, 2000);
+        }, 1000);
       }
     } catch (err) {
       console.log(err);
